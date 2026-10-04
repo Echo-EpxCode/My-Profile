@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jonefer Nano Codillo | NFC Cards for Local Businesses</title>
+        <meta name="description"
+            content="Smart NFC cards that help restaurants, gyms, hotels, and local stores turn every customer tap into a review and social connection. Professional setup for Davao businesses.">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+            rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace']},
+                        colors: {
+                            charcoal: {900: '#121416', 800: '#1A1E22', 700: '#2A2F36', 600: '#3F464F', 100: '#E8EAED'},
+                            emerald: {500: '#10B981', 600: '#059669', 50: '#ECFDF5'}
+                        }
+                    }
+                }
+            }
+        </script>
+        <style>
+            html {
+                scroll-behavior: smooth
+            }
+
+            .reveal {
+                opacity: 0;
+                transform: translateY(24px);
+                transition: all.7s cubic-bezier(.16, 1, .3, 1)
+            }
+
+            .reveal.active {
+                opacity: 1;
+                transform: translateY(0)
+            }
+
+            @media(prefers-reduced-motion:reduce) {
+                .reveal {
+                    opacity: 1;
+                    transform: none;
+                    transition: none
+                }
+            }
+        </style>
+    </head>
+
+    <body class="bg-[#FCFCFB] text-charcoal-900 font-sans antialiased selection:bg-emerald-500 selection:text-white"
+        x-data="{
+  mobileOpen:false,
+  modalOpen:false,
+  activeProject:null,
+  projects: [
+    { id:1, name:'Mori Coffee House', category:'Restaurant', location:'Davao City', image:'https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=1200', desc:'Custom NFC stand configured for Facebook reviews and Instagram. Placed at counter for easy customer tap.', customer:'Andrea Lim', business:'Mori Coffee House', rating:5, review:'The NFC card makes it much easier for our customers to find our pages and leave feedback. Setup was professional and quick.', photo:'https://i.pravatar.cc/100?img=5' },
+    { id:2, name:'Flexform Fitness', category:'Gym', location:'Matina, Davao', image:'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200', desc:'Member check-in NFC card linking to Google Reviews and TikTok. Increased social tags from members.', customer:'Mark Reyes', business:'Flexform Fitness', rating:5, review:'Members actually tap it after workout. We got more tagged stories and reviews in the first week than last month.', photo:'https://i.pravatar.cc/100?img=15' },
+    { id:3, name:'Casa Leticia Hotel', category:'Hotel', location:'Davao City', image:'https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=1200', desc:'Lobby NFC card for checkout review flow. Direct link to Facebook Page and review tab.', customer:'Sofia Tan', business:'Casa Leticia', rating:5, review:'Very clean presentation. Guests understand it immediately - just tap. Looks premium in our lobby.', photo:'https://i.pravatar.cc/100?img=9' },
+    { id:4, name:'The Study Nook', category:'Study Space', location:'Obrero, Davao', image:'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1200', desc:'NFC desk cards for students to access booking page, Instagram updates, and feedback form.', customer:'Jonefer N. Codillo', business:'The Study Nook', rating:5, review:'Professional work. The card design matches our brand and students use it daily.', photo:'https://i.pravatar.cc/100?img=32' }
+  ],
+  openProject(p){ this.activeProject=p; this.modalOpen=true; document.body.style.overflow='hidden' },
+  closeProject(){ this.modalOpen=false; document.body.style.overflow=''; setTimeout(()=>this.activeProject=null,200) }
+}" @keydown.escape="closeProject(); mobileOpen=false" x-init="
+  const ro = new IntersectionObserver(entries => { entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('active') }) }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+">
+
+        <!-- NAV -->
+        <header id="navbar" class="fixed top-0 w-full z-40">
+            <nav
+                class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between bg-white/80 backdrop-blur-xl border border-black/[0.06] mt-4 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.06)] lg:mt-6">
+                <a href="#home" class="flex items-center gap-2 font-bold tracking-tight text-[17px]">
+                    <span
+                        class="w-8 h-8 bg-charcoal-900 text-white grid place-items-center rounded-lg font-mono text-[13px]">JN</span>
+                    Jonefer Nano Codillo
+                </a>
+                <div class="hidden lg:flex items-center gap-8 text-[14px] font-medium text-charcoal-600">
+                    <a href="#home" class="hover:text-charcoal-900">Home</a>
+                    <a href="#services" class="hover:text-charcoal-900">Services</a>
+                    <a href="#projects" class="hover:text-charcoal-900">Projects</a>
+                    <a href="#reviews" class="hover:text-charcoal-900">Reviews</a>
+                    <a href="#how" class="hover:text-charcoal-900">How It Works</a>
+                </div>
+                <div class="hidden lg:block">
+                    <a href="#cta"
+                        class="bg-charcoal-900 text-white px-5 py-2.5 rounded-full text-[14px] font-medium hover:bg-black transition">Get
+                        Started</a>
+                </div>
+                <button @click="mobileOpen=!mobileOpen"
+                    class="lg:hidden w-10 h-10 grid place-items-center rounded-full bg-charcoal-900 text-white">
+                    <svg x-show="!mobileOpen" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 6h12M3 12h12" />
+                    </svg>
+                    <svg x-show="mobileOpen" x-cloak width="18" height="18" fill="none" stroke="currentColor"
+                        stroke-width="2">
+                        <path d="M6 6l8 8M14 6l-8 8" />
+                    </svg>
+                </button>
+            </nav>
+            <!-- Mobile Menu -->
+            <div x-show="mobileOpen" x-transition:enter="transition ease-out duration-200"
+                x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0 -translate-y-2"
+                class="lg:hidden mx-4 mt-2 bg-white border border-black/10 rounded-2xl shadow-xl p-6 space-y-4">
+                <a @click="mobileOpen=false" href="#home" class="block font-medium">Home</a>
+                <a @click="mobileOpen=false" href="#services" class="block font-medium">Services</a>
+                <a @click="mobileOpen=false" href="#projects" class="block font-medium">Projects</a>
+                <a @click="mobileOpen=false" href="#how" class="block font-medium">How It Works</a>
+                <a @click="mobileOpen=false" href="#cta"
+                    class="block mt-4 bg-charcoal-900 text-white text-center py-3 rounded-full">Get Started</a>
+            </div>
+        </header>
+
+        <!-- HERO -->
+        <section id="home" class="pt-32 lg:pt-44 pb-16 lg:pb-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-6 reveal">
+                    <div
+                        class="inline-flex items-center gap-2 bg-charcoal-900 text-white text-[11px] font-mono tracking-widest uppercase px-3 py-1.5 rounded-full">
+                        NFC • Reviews • Social</div>
+                    <h1 class="mt-6 text-[36px] sm:text-[48px] lg:text-[56px] font-bold leading-[0.95] tracking-tight">
+                        Turn every<br>customer tap<br><span class="text-emerald-600">into a review.</span></h1>
+                    <p class="mt-5 text-[17px] leading-7 text-charcoal-600 max-w-[480px]">Smart NFC cards for
+                        restaurants, gyms, hotels, stores, and study spaces. Customers tap their phone — directly to
+                        your Facebook, Instagram, TikTok and review page.</p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="#cta"
+                            class="bg-charcoal-900 text-white px-7 h-12 grid place-items-center rounded-full text-[14px] font-semibold hover:bg-black transition">Get
+                            Started</a>
+                        <a href="#projects"
+                            class="border border-black/10 px-7 h-12 grid place-items-center rounded-full text-[14px] font-semibold hover:bg-black/5 transition">View
+                            Our Projects</a>
+                    </div>
+                    <div class="mt-8 flex items-center gap-3 text-[13px] text-charcoal-600"><span
+                            class="flex -space-x-2"><img src="https://i.pravatar.cc/32?img=1"
+                                class="w-7 h-7 rounded-full border-2 border-white"><img
+                                src="https://i.pravatar.cc/32?img=2"
+                                class="w-7 h-7 rounded-full border-2 border-white"><img
+                                src="https://i.pravatar.cc/32?img=3"
+                                class="w-7 h-7 rounded-full border-2 border-white"></span> Trusted by local businesses
+                        in Davao</div>
+                </div>
+                <div class="lg:col-span-6 reveal lg:pl-10">
+                    <div
+                        class="relative bg-gradient-to-b from-charcoal-100 to-white rounded-[32px] p-6 lg:p-10 border border-black/5">
+                        <div class="relative aspect-[4/3] bg-charcoal-900 rounded-[20px] shadow-2xl overflow-hidden">
+                            <div class="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                            <div class="absolute top-6 left-6 right-6 flex justify-between">
+                                <div
+                                    class="w-10 h-10 bg-white/10 backdrop-blur rounded-full grid place-items-center text-white">
+                                    ◍</div>
+                                <span class="font-mono text-[10px] text-white/60 tracking-widest">NFC ENABLED</span>
+                            </div>
+                            <div class="absolute bottom-0 p-8 text-white">
+                                <p class="font-mono text-[11px] tracking-widest opacity-60">JONEFER NANO CODILLO</p>
+                                <p class="text-[22px] font-semibold mt-1 leading-tight">Tap to Review & Connect</p>
+                                <div class="mt-4 flex gap-2"><span
+                                        class="bg-white text-black text-[11px] font-semibold px-2.5 py-1 rounded-full">Facebook</span><span
+                                        class="bg-white/15 text-white text-[11px] px-2.5 py-1 rounded-full">Instagram</span><span
+                                        class="bg-white/15 text-white text-[11px] px-2.5 py-1 rounded-full">TikTok</span>
+                                </div>
+                            </div>
+                            <div
+                                class="absolute -right-6 -top-6 w-40 h-40 bg-emerald-500 rounded-full blur-[60px] opacity-40">
+                            </div>
+                        </div>
+                        <div
+                            class="mt-6 bg-white border border-black/5 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                            <div class="w-12 h-12 bg-emerald-50 rounded-xl grid place-items-center text-emerald-600">📱
+                            </div>
+                            <div>
+                                <p class="text-[13px] font-semibold">Phone Tap Detected</p>
+                                <p class="text-[12px] text-charcoal-600">Opening Review Page...</p>
+                            </div>
+                            <div class="ml-auto w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services" class="py-20 bg-white border-y border-black/5">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl reveal">
+                    <p class="font-mono text-[11px] tracking-widest text-emerald-600">WHAT WE PROVIDE</p>
+                    <h2 class="mt-3 text-[30px] lg:text-[40px] font-bold tracking-tight leading-[1.1]">Everything to
+                        turn a tap<br>into a connection.</h2>
+                </div>
+                <div class="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div
+                        class="reveal group p-6 rounded-2xl border border-black/5 hover:border-black/10 hover:shadow-lg transition bg-[#FCFCFB]">
+                        <div class="w-10 h-10 bg-charcoal-900 text-white rounded-xl grid place-items-center">◍</div>
+                        <h3 class="mt-5 font-semibold">NFC Review Card</h3>
+                        <p class="mt-2 text-[14px] leading-6 text-charcoal-600">Customers tap with any smartphone. No
+                            app needed. Instant connection.</p>
+                    </div>
+                    <div
+                        class="reveal group p-6 rounded-2xl border border-black/5 hover:border-black/10 hover:shadow-lg transition bg-[#FCFCFB]">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl grid place-items-center">★</div>
+                        <h3 class="mt-5 font-semibold">Review Access</h3>
+                        <p class="mt-2 text-[14px] leading-6 text-charcoal-600">Direct your customers to your review
+                            page — reduce friction, get more feedback.</p>
+                    </div>
+                    <div
+                        class="reveal group p-6 rounded-2xl border border-black/5 hover:border-black/10 hover:shadow-lg transition bg-[#FCFCFB]">
+                        <div class="w-10 h-10 bg-charcoal-900 text-white rounded-xl grid place-items-center">◎</div>
+                        <h3 class="mt-5 font-semibold">Social Media Access</h3>
+                        <p class="mt-2 text-[14px] leading-6 text-charcoal-600">Link to Facebook, Instagram, TikTok in
+                            one tap. Grow your social presence.</p>
+                    </div>
+                    <div
+                        class="reveal group p-6 rounded-2xl border border-black/5 hover:border-black/10 hover:shadow-lg transition bg-[#FCFCFB]">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl grid place-items-center">⚙</div>
+                        <h3 class="mt-5 font-semibold">Business Setup</h3>
+                        <p class="mt-2 text-[14px] leading-6 text-charcoal-600">Configured specifically for your
+                            business. Logo, links, placement guidance included.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY -->
+        <section class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-5 reveal">
+                    <h2 class="text-[28px] lg:text-[36px] font-bold tracking-tight leading-[1.1]">
+                        Professional.<br>Simple. Built for<br>local businesses.</h2>
+                </div>
+                <div class="lg:col-span-7 grid sm:grid-cols-2 gap-6">
+                    <div class="reveal border-t border-black/10 pt-6">
+                        <p class="font-mono text-[11px] text-emerald-600">01</p>
+                        <h4 class="mt-2 font-semibold">Simple Customer Experience</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600 leading-6">No QR scanning, no typing. Just tap.
+                            Works on iPhone and Android.</p>
+                    </div>
+                    <div class="reveal border-t border-black/10 pt-6">
+                        <p class="font-mono text-[11px] text-emerald-600">02</p>
+                        <h4 class="mt-2 font-semibold">Professional Presentation</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600 leading-6">Premium card design that looks credible
+                            on your counter or lobby.</p>
+                    </div>
+                    <div class="reveal border-t border-black/10 pt-6">
+                        <p class="font-mono text-[11px] text-emerald-600">03</p>
+                        <h4 class="mt-2 font-semibold">Built for Local Businesses</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600 leading-6">Designed for restaurants, gyms, hotels,
+                            stores, and study pads in Davao.</p>
+                    </div>
+                    <div class="reveal border-t border-black/10 pt-6">
+                        <p class="font-mono text-[11px] text-emerald-600">04</p>
+                        <h4 class="mt-2 font-semibold">Easy Customer Access</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600 leading-6">One tap to reviews and social — where
+                            customers already are.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="py-20 bg-charcoal-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap justify-between gap-4 reveal">
+                    <div>
+                        <p class="font-mono text-[11px] tracking-widest text-emerald-400">PROJECTS WE'VE DELIVERED</p>
+                        <h2 class="mt-3 text-[30px] lg:text-[40px] font-bold tracking-tight">Real work created
+                            for<br>local businesses.</h2>
+                    </div>
+                    <p class="max-w-sm text-[14px] leading-6 text-white/60">Placeholder images below — replace with
+                        actual completed projects. Data structure is ready for real content.</p>
+                </div>
+
+                <div id="reviews" class="mt-12 grid md:grid-cols-2 gap-6">
+                    <template x-for="project in projects" :key="project.id">
+                        <article
+                            class="group bg-white text-charcoal-900 rounded-[24px] overflow-hidden border border-white/10 hover:shadow-2xl transition cursor-pointer reveal"
+                            @click="openProject(project)">
+                            <div class="aspect-[16/10] overflow-hidden bg-charcoal-100">
+                                <img :src="project.image" :alt="project.name" loading="lazy"
+                                    class="w-full h-full object-cover group-hover:scale-[1.03] transition duration-700">
+                            </div>
+                            <div class="p-6">
+                                <div class="flex items-center justify-between">
+                                    <span
+                                        class="text-[11px] font-mono tracking-widest bg-charcoal-900 text-white px-2.5 py-1 rounded-full"
+                                        x-text="project.category"></span>
+                                    <span class="text-[12px] text-charcoal-600" x-text="project.location"></span>
+                                </div>
+                                <h3 class="mt-4 text-[20px] font-bold tracking-tight" x-text="project.name"></h3>
+                                <p class="mt-2 text-[14px] leading-6 text-charcoal-600" x-text="project.desc"></p>
+                                <div class="mt-6 border-t border-black/5 pt-5">
+                                    <div class="flex items-center gap-1 text-[13px]"><span
+                                            class="text-amber-400">★★★★★</span><span class="font-semibold ml-1"
+                                            x-text="project.rating + '.0/5'"></span></div>
+                                    <p class="mt-2 text-[14px] leading-6 italic text-charcoal-700"
+                                        x-text="`&quot;${project.review}&quot;`"></p>
+                                    <div class="mt-4 flex items-center gap-3">
+                                        <img :src="project.photo" class="w-8 h-8 rounded-full" alt="">
+                                        <div>
+                                            <p class="text-[13px] font-semibold" x-text="project.customer"></p>
+                                            <p class="text-[11px] text-charcoal-600" x-text="project.business"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW -->
+        <section id="how" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl reveal">
+                    <p class="font-mono text-[11px] tracking-widest text-emerald-600">HOW IT WORKS</p>
+                    <h2 class="mt-3 text-[30px] lg:text-[40px] font-bold tracking-tight leading-[1.1]">From card to
+                        customer<br>in 4 simple steps.</h2>
+                </div>
+                <div class="mt-12 grid lg:grid-cols-4 gap-8 relative">
+                    <div
+                        class="hidden lg:block absolute top-8 left-[10%] right-[10%] h-px bg-gradient-to-r from-black/5 via-black/10 to-black/5">
+                    </div>
+                    <div class="reveal relative bg-[#FCFCFB] border border-black/5 rounded-2xl p-6"><span
+                            class="w-8 h-8 bg-charcoal-900 text-white rounded-full grid place-items-center text-[12px] font-mono">01</span>
+                        <h4 class="mt-4 font-semibold">Choose Your NFC Card</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600">Select style that fits your counter, table, or
+                            lobby.</p>
+                    </div>
+                    <div class="reveal relative bg-[#FCFCFB] border border-black/5 rounded-2xl p-6"><span
+                            class="w-8 h-8 bg-charcoal-900 text-white rounded-full grid place-items-center text-[12px] font-mono">02</span>
+                        <h4 class="mt-4 font-semibold">Customize Experience</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600">We configure links to your review page and
+                            socials.</p>
+                    </div>
+                    <div class="reveal relative bg-[#FCFCFB] border border-black/5 rounded-2xl p-6"><span
+                            class="w-8 h-8 bg-emerald-600 text-white rounded-full grid place-items-center text-[12px] font-mono">03</span>
+                        <h4 class="mt-4 font-semibold">Connect Platforms</h4>
+                        <p class="mt-2 text-[14px] text-charcoal-600">Facebook, Instagram, TikTok — one tap, all
+                            destinations.</p>
+                    </div>
+                    <div class="reveal relative bg-charcoal-900 text-white rounded-2xl p-6"><span
+                            class="w-8 h-8 bg-white text-black rounded-full grid place-items-center text-[12px] font-mono">04</span>
+                        <h4 class="mt-4 font-semibold">Start Getting Engagement</h4>
+                        <p class="mt-2 text-[14px] text-white/70">Place at checkout. Customers tap, review, follow.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section id="cta" class="py-20">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="reveal rounded-[32px] bg-charcoal-900 text-white p-8 lg:p-16 flex flex-col lg:flex-row justify-between gap-10 items-start lg:items-center relative overflow-hidden">
+                    <div
+                        class="absolute -right-20 -top-20 w-[400px] h-[400px] bg-emerald-500 rounded-full blur-[120px] opacity-20">
+                    </div>
+                    <div class="relative max-w-xl">
+                        <h2 class="text-[30px] lg:text-[44px] font-bold tracking-tight leading-[1.05]">Give your
+                            customers an easier way to find you.</h2>
+                        <p class="mt-4 text-[15px] leading-6 text-white/70">Make it simple for customers to connect with
+                            your business, leave a review, and find you on social media.</p>
+                    </div>
+                    <div class="relative flex flex-wrap gap-3"><a href="#"
+                            class="bg-white text-black px-7 h-12 grid place-items-center rounded-full text-[14px] font-semibold hover:bg-zinc-100 transition">Get
+                            Started</a><a href="#projects"
+                            class="bg-white/10 border border-white/15 text-white px-7 h-12 grid place-items-center rounded-full text-[14px] font-semibold hover:bg-white/15 transition">View
+                            Projects</a></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="py-12 border-t border-black/5 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 text-[14px]">
+                <div class="lg:col-span-5">
+                    <div class="flex items-center gap-2 font-bold"><span
+                            class="w-8 h-8 bg-charcoal-900 text-white grid place-items-center rounded-lg font-mono text-[13px]">JN</span>
+                        Jonefer Nano Codillo</div>
+                    <p class="mt-4 text-charcoal-600 leading-6 max-w-sm">Smart NFC review cards for local businesses in
+                        Davao. Helping restaurants, gyms, hotels, stores, and study spaces get more reviews and social
+                        engagement.</p>
+                </div>
+                <div class="lg:col-span-2">
+                    <p class="font-semibold">Navigation</p>
+                    <div class="mt-4 space-y-2 text-charcoal-600"><a href="#home"
+                            class="block hover:text-black">Home</a><a href="#services"
+                            class="block hover:text-black">Services</a><a href="#projects"
+                            class="block hover:text-black">Projects</a><a href="#how" class="block hover:text-black">How
+                            It Works</a></div>
+                </div>
+                <div class="lg:col-span-2">
+                    <p class="font-semibold">Platforms</p>
+                    <div class="mt-4 space-y-2 text-charcoal-600"><span class="block">Facebook Reviews</span><span
+                            class="block">Instagram</span><span class="block">TikTok</span></div>
+                </div>
+                <div class="lg:col-span-3">
+                    <p class="font-semibold">Contact</p>
+                    <div class="mt-4 space-y-2 text-charcoal-600"><span class="block">Davao City,
+                            Philippines</span><span class="block">Placeholder email - replace</span><span
+                            class="block">Placeholder phone - replace</span></div>
+                    <div class="mt-4 flex gap-2"><a href="#"
+                            class="w-8 h-8 rounded-full bg-black/5 grid place-items-center hover:bg-black/10">Fb</a><a
+                            href="#"
+                            class="w-8 h-8 rounded-full bg-black/5 grid place-items-center hover:bg-black/10">Ig</a><a
+                            href="#"
+                            class="w-8 h-8 rounded-full bg-black/5 grid place-items-center hover:bg-black/10">Tk</a>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-black/5 flex flex-wrap justify-between gap-4 text-[12px] text-charcoal-600">
+                <span>© <span x-text="new Date().getFullYear()"></span> Jonefer Nano Codillo. All rights
+                    reserved.</span><span class="font-mono">BUILT FOR LOCAL BUSINESSES • DAVAO CITY</span>
+            </div>
+        </footer>
+
+        <!-- PROJECT MODAL -->
+        <div x-show="modalOpen" x-cloak class="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div @click="closeProject()" class="absolute inset-0 bg-charcoal-900/80 backdrop-blur-sm"
+                x-transition.opacity></div>
+            <div class="relative w-full max-w-3xl bg-white rounded-[24px] overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto"
+                x-show="modalOpen" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+                x-transition:leave-end="opacity-0 scale-95">
+                <template x-if="activeProject">
+                    <div>
+                        <div class="aspect-[16/9] bg-charcoal-100 relative"><img :src="activeProject.image"
+                                :alt="activeProject.name" class="w-full h-full object-cover"><button
+                                @click="closeProject()"
+                                class="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full grid place-items-center hover:bg-white">✕</button>
+                        </div>
+                        <div class="p-8">
+                            <div class="flex items-center gap-3"><span
+                                    class="text-[11px] font-mono tracking-widest bg-charcoal-900 text-white px-3 py-1 rounded-full"
+                                    x-text="activeProject.category"></span><span class="text-[13px] text-charcoal-600"
+                                    x-text="activeProject.location"></span></div>
+                            <h3 class="mt-4 text-[28px] font-bold tracking-tight" x-text="activeProject.name"></h3>
+                            <p class="mt-2 text-charcoal-600 leading-7" x-text="activeProject.desc"></p>
+                            <div class="mt-8 bg-[#FCFCFB] border border-black/5 rounded-2xl p-6">
+                                <div class="flex items-center gap-1 text-[14px]"><span
+                                        class="text-amber-400">★★★★★</span><span class="ml-2 font-semibold"
+                                        x-text="activeProject.rating + '.0/5'"></span></div>
+                                <p class="mt-3 text-[15px] leading-7 italic"
+                                    x-text="`&quot;${activeProject.review}&quot;`"></p>
+                                <div class="mt-5 flex items-center gap-3"><img :src="activeProject.photo"
+                                        class="w-10 h-10 rounded-full">
+                                    <div>
+                                        <p class="text-[14px] font-semibold" x-text="activeProject.customer"></p>
+                                        <p class="text-[12px] text-charcoal-600"
+                                            x-text="activeProject.business + ' • ' + activeProject.location"></p>
+                                    </div>
+                                </div>
+                                <p class="mt-4 text-[11px] font-mono text-charcoal-600 uppercase tracking-widest">
+                                    Placeholder review — replace with verified customer review</p>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+    </body>
+
+</html>
